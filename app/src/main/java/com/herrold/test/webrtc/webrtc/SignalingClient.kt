@@ -10,7 +10,7 @@ import okhttp3.Request
 import okhttp3.OkHttpClient
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
-import org.webrtc.BuildConfig
+import com.herrold.test.webrtc.BuildConfig
 
 class SignalingClient {
     private val logger by taggedLogger("Call:SignalingClient")

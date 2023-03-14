@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.herrold.test.webrtc"
-    compileSdk  = Configurations.compileSdk
+    compileSdk = Configurations.compileSdk
 
     defaultConfig {
         applicationId = "com.herrold.test.webrtc"
@@ -22,10 +22,31 @@ android {
         buildConfigField(
             "String",
             "SIGNALING_SERVER_IP_ADDRESS",
-            "SIGNALING_SERVER_IP_ADDRESS" //gradleLocalProperties(rootDir).getProperty("SIGNALING_SERVER_IP_ADDRESS", "")
+            gradleLocalProperties(rootDir).getProperty("SIGNALING_SERVER_IP_ADDRESS", "")
         )
     }
 
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+        getByName("debug") {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
     kotlinOptions {
         jvmTarget = "1.8"
     }
@@ -33,7 +54,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion  = libs.versions.androidxComposeCompiler.get()
+        kotlinCompilerExtensionVersion = libs.versions.androidxComposeCompiler.get()
     }
 
     packagingOptions {
@@ -71,6 +92,4 @@ dependencies {
 
     // logger
     implementation(libs.stream.log)
-    implementation("androidx.core:core-ktx:+")
-    implementation("androidx.core:core-ktx:+")
 }

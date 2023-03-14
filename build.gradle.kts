@@ -1,6 +1,6 @@
 buildscript {
     extra.apply {
-        set("kotlinVersion", "1.8.20-RC")
+        set("kotlinVersion", "1.8.0")
     }
     val supportLibraryVersion = extra.get("kotlinVersion") as String
 
@@ -11,7 +11,7 @@ buildscript {
 
     dependencies {
         classpath("com.android.tools.build:gradle:7.4.2")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.20-RC")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$supportLibraryVersion")
     }
 }
 
