@@ -10,12 +10,15 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven {
-            url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap")
+        maven(url = "https://jitpack.io")
+        maven(url = "https://plugins.gradle.org/m2/")
+    }
+    versionCatalogs {
+        create("libs") {
+            from(files("./gradle/lib-versions.toml"))
         }
-        maven { url = "https://jitpack.io" }
-        maven { url = "https://plugins.gradle.org/m2/" }
     }
 }
+//enableFeaturePreview("VERSION_CATALOGS")
 rootProject.name = "WebRTC"
-include ':app'
+include(":app")

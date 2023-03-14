@@ -1,10 +1,20 @@
-buildScript {
+buildscript {
+    extra.apply {
+        set("kotlinVersion", "1.8.20-RC")
+    }
+    val supportLibraryVersion = extra.get("kotlinVersion") as String
+
     repositories {
         google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("com.android.tools.build:gradle:7.4.2")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.20-RC")
     }
 }
 
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.jvm) apply false
@@ -33,6 +43,7 @@ subprojects {
                     "continuation_indent_size" to "4",
                     "max_line_length" to "120",
                     "disabled_rules" to "import-ordering",
+                    "wildcard_imports" to "false",
                 )
             )
             licenseHeaderFile(rootProject.file("spotless/copyright.kt"))
