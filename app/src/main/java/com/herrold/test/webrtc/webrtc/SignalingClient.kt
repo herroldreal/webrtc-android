@@ -16,10 +16,29 @@ class SignalingClient {
     private val logger by taggedLogger("Call:SignalingClient")
     private val signalingScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private val httpClient = OkHttpClient()
-    private val request = Request
-        .Builder()
-        .url(BuildConfig.SIGNALING_SERVER_IP_ADDRESS)
-        .build()
+    private val request = Request.Builder().url(BuildConfig.SIGNALING_SERVER_IP_ADDRESS).build()
+
+    val webSocket = OkHttpClient().newWebSocket(request, object: WebSocketListener() {
+        override fun onMessage(webSocket: WebSocket, text: String) {
+            logger.d { "received message: $text" }
+        }
+
+        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+            logger.d { "closed: $code $reason" }
+        }
+
+        override fun onFailure(webSocket: WebSocket, t: Throwable, response: okhttp3.Response?) {
+            logger.d { "failure: $t" }
+        }
+
+        override fun onOpen(webSocket: WebSocket, response: okhttp3.Response) {
+            logger.d { "opened" }
+        }
+
+        override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
+            logger.d { "closing: $code $reason" }
+        }
+    })
 
     private val ws = httpClient.newWebSocket(request, SignalingWebSocketListener())
 
@@ -80,6 +99,7 @@ enum class WebRTCSessionState {
     Impossible,
     Offline,
 }
+
 enum class SignalingCommand {
     STATE,
     OFFER,
