@@ -18,28 +18,6 @@ class SignalingClient {
     private val httpClient = OkHttpClient()
     private val request = Request.Builder().url(BuildConfig.SIGNALING_SERVER_IP_ADDRESS).build()
 
-    val webSocket = OkHttpClient().newWebSocket(request, object: WebSocketListener() {
-        override fun onMessage(webSocket: WebSocket, text: String) {
-            logger.d { "received message: $text" }
-        }
-
-        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-            logger.d { "closed: $code $reason" }
-        }
-
-        override fun onFailure(webSocket: WebSocket, t: Throwable, response: okhttp3.Response?) {
-            logger.d { "failure: $t" }
-        }
-
-        override fun onOpen(webSocket: WebSocket, response: okhttp3.Response) {
-            logger.d { "opened" }
-        }
-
-        override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
-            logger.d { "closing: $code $reason" }
-        }
-    })
-
     private val ws = httpClient.newWebSocket(request, SignalingWebSocketListener())
 
     // session flow to send information about the session state to the subscribers
@@ -52,7 +30,7 @@ class SignalingClient {
 
     fun sendCommand(signalingCommand: SignalingCommand, message: String) {
         logger.d { "[sendCommand] $signalingCommand $message" }
-        ws.send("$signalingCommand $message")
+        ws.send("{ action: $signalingCommand, message: $message }")
     }
 
     fun dispose() {
@@ -100,11 +78,11 @@ enum class WebRTCSessionState {
     Offline,
 }
 
-enum class SignalingCommand {
-    STATE,
-    OFFER,
-    ANSWER,
-    ICE,
-    CANDIDATE,
-    BYE,
+enum class SignalingCommand (val value: String){
+    STATE("state"),
+    OFFER("offer"),
+    ANSWER("answer"),
+    ICE("ice"),
+    CANDIDATE("candidate"),
+    BYE("bye"),
 }
