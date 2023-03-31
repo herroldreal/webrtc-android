@@ -1,16 +1,16 @@
 package com.herrold.test.webrtc.webrtc
 
+import androidx.compose.ui.text.toLowerCase
+import com.google.gson.Gson
+import com.herrold.test.webrtc.BuildConfig
+import com.herrold.test.webrtc.webrtc.utils.SignalingModel
 import io.getstream.log.taggedLogger
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import okhttp3.Request
-import okhttp3.OkHttpClient
-import okhttp3.WebSocket
-import okhttp3.WebSocketListener
-import com.herrold.test.webrtc.BuildConfig
+import okhttp3.*
 
 class SignalingClient {
     private val logger by taggedLogger("Call:SignalingClient")
@@ -30,7 +30,9 @@ class SignalingClient {
 
     fun sendCommand(signalingCommand: SignalingCommand, message: String) {
         logger.d { "[sendCommand] $signalingCommand $message" }
-        ws.send("{ action: $signalingCommand, message: $message }")
+        val model = SignalingModel(signalingCommand.toString().lowercase(), message)
+        val json: String = Gson().toJson(model, SignalingModel::class.java)
+        ws.send(json)
     }
 
     fun dispose() {
@@ -40,6 +42,10 @@ class SignalingClient {
     }
 
     private inner class SignalingWebSocketListener : WebSocketListener() {
+        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+            logger.d { "onFailure signaling: ${t.message} ${response.toString()}" }
+        }
+
         override fun onMessage(webSocket: WebSocket, text: String) {
             when {
                 text.startsWith(SignalingCommand.STATE.toString(), true) ->

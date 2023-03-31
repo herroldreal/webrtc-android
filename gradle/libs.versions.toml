@@ -22,8 +22,10 @@ retrofit = "2.9.0"
 retrofitResultAdapter = "1.0.5"
 retrofitKotlinxSerializationJson = "0.8.0"
 spotless = "6.7.0"
+gson = "2.8.7"
 
 [libraries]
+gson = { group= "com.google.code.gson", name = "gson", version.ref = "gson" }
 webrtc = { group = "io.getstream", name = "stream-webrtc-android", version.ref = "webrtc" }
 stream-log = { group = "io.getstream", name = "stream-log-android", version.ref = "streamLog" }
 landscapist-glide = { group = "com.github.skydoves", name = "landscapist-glide", version.ref = "landscapist" }

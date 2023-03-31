@@ -80,6 +80,9 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.constraintlayout)
 
+    // JSON parsing
+    implementation(libs.gson)
+
     // image loading
     implementation(libs.landscapist.glide)
 
